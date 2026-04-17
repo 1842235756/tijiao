@@ -1,134 +1,134 @@
+```react
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>智汇订单管理系统</title>
+    <title>OrderHub | 订单管理终端</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
         
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-            background: linear-gradient(135deg, #f6f8fb 0%, #e9effd 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             min-height: 100vh;
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
         }
 
-        .gradient-btn {
-            background: linear-gradient(90deg, #4f46e5 0%, #3b82f6 100%);
+        .btn-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .input-focus {
             transition: all 0.3s ease;
         }
 
-        .gradient-btn:hover {
-            filter: brightness(1.1);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        .input-focus:focus {
+            background: white;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
 
-        /* 隐藏滚动条但保留功能 */
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
+        .animate-fade-up {
+            animation: fadeUp 0.5s ease-out forwards;
         }
 
-        .animate-in {
-            animation: fadeInScale 0.4s ease-out forwards;
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.98); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 sm:p-8">
 
     <div class="max-w-5xl mx-auto">
-        <!-- 头部导航 -->
-        <header class="flex justify-between items-center mb-10 px-2">
-            <div>
-                <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-500">
-                    OrderHub
-                </h1>
-                <p class="text-xs text-gray-500 font-medium">智能订单处理终端</p>
-            </div>
-            <nav class="flex space-x-2 bg-white/50 p-1 rounded-full border border-white/50">
-                <button onclick="switchTab('submit')" id="tab-submit" class="px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 bg-white shadow-sm text-indigo-600">
-                    数据提交
-                </button>
-                <button onclick="switchTab('admin')" id="tab-admin" class="px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 text-gray-600 hover:text-indigo-600">
-                    管理后台
-                </button>
-            </nav>
-        </header>
-
-        <!-- 提交区域 -->
-        <main id="view-submit" class="animate-in">
-            <div class="max-w-md mx-auto">
-                <div class="glass-card p-8 rounded-3xl">
-                    <div class="mb-8">
-                        <h2 class="text-xl font-bold text-gray-800">新建提交</h2>
-                        <p class="text-sm text-gray-400">请录入支付链接及关联订单号</p>
-                    </div>
-
-                    <form id="submissionForm" class="space-y-6">
-                        <div class="space-y-2">
-                            <label class="text-sm font-semibold text-gray-600 ml-1">订单链接</label>
-                            <input type="text" id="link" placeholder="必须包含 alipay 字符" 
-                                class="w-full px-4 py-3.5 rounded-2xl border-0 bg-white shadow-inner focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-gray-300" required>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-sm font-semibold text-gray-600 ml-1">订单编号</label>
-                            <input type="text" id="orderId" placeholder="请输入订单号" 
-                                class="w-full px-4 py-3.5 rounded-2xl border-0 bg-white shadow-inner focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-gray-300" required>
-                        </div>
-                        <button type="submit" id="submitBtn" class="w-full gradient-btn text-white font-bold py-4 rounded-2xl shadow-lg mt-4">
-                            确认并提交
-                        </button>
-                    </form>
+        <!-- 导航头部 -->
+        <nav class="flex justify-between items-center mb-10">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-800">OrderHub</h1>
+                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Enterprise Suite</span>
                 </div>
             </div>
-        </main>
+            
+            <div class="bg-gray-200/50 p-1 rounded-2xl flex">
+                <button onclick="switchView('submit')" id="tab-submit" class="px-5 py-2 rounded-xl text-sm font-bold transition-all bg-white shadow-sm text-indigo-600">提交中心</button>
+                <button onclick="switchView('admin')" id="tab-admin" class="px-5 py-2 rounded-xl text-sm font-bold transition-all text-gray-500 hover:text-indigo-600">管理后台</button>
+            </div>
+        </nav>
 
-        <!-- 管理后台 (初始隐藏) -->
-        <main id="view-admin" class="hidden animate-in">
-            <!-- 密码锁屏 -->
-            <div id="admin-auth" class="max-w-md mx-auto text-center py-20">
-                <div class="glass-card p-8 rounded-3xl">
-                    <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+        <!-- 提交界面 -->
+        <section id="view-submit" class="animate-fade-up max-w-md mx-auto">
+            <div class="glass-card rounded-[2.5rem] p-10">
+                <div class="mb-8 text-center">
+                    <h2 class="text-2xl font-bold text-gray-800">录入新订单</h2>
+                    <p class="text-sm text-gray-400 mt-1">请输入有效的支付链接与单号</p>
+                </div>
+
+                <form id="submissionForm" class="space-y-6">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">支付链接</label>
+                        <input type="text" id="link" placeholder="必须包含 alipay 字符" required
+                            class="w-full px-5 py-4 rounded-2xl bg-gray-50 border-0 input-focus outline-none text-gray-700 placeholder:text-gray-300">
                     </div>
-                    <h2 class="text-xl font-bold text-gray-800 mb-2">身份验证</h2>
-                    <p class="text-sm text-gray-400 mb-6">请输入管理员密码以继续</p>
-                    <input type="password" id="adminPwd" placeholder="输入密码 (默认 admin888)" 
-                        class="w-full px-4 py-3 rounded-xl border-gray-100 bg-gray-50 mb-4 text-center outline-none focus:ring-2 focus:ring-indigo-500">
-                    <button onclick="verifyAdmin()" class="w-full bg-gray-800 text-white py-3 rounded-xl font-bold">解锁进入</button>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">订单编号</label>
+                        <input type="text" id="orderId" placeholder="请输入订单号" required
+                            class="w-full px-5 py-4 rounded-2xl bg-gray-50 border-0 input-focus outline-none text-gray-700 placeholder:text-gray-300">
+                    </div>
+                    <button type="submit" id="submitBtn" class="w-full btn-gradient text-white font-bold py-4 rounded-2xl shadow-lg mt-4 flex items-center justify-center space-x-2">
+                        <span>立即提交数据</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 管理后台 -->
+        <section id="view-admin" class="hidden animate-fade-up">
+            <!-- 密码验证层 -->
+            <div id="auth-wall" class="max-w-md mx-auto pt-10">
+                <div class="glass-card rounded-[2.5rem] p-10 text-center">
+                    <div class="w-16 h-16 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">安全验证</h2>
+                    <p class="text-sm text-gray-400 mb-8">此区域仅管理员可见</p>
+                    <input type="password" id="adminPwd" placeholder="请输入管理密码" 
+                        class="w-full px-5 py-4 rounded-2xl bg-gray-50 text-center border-0 outline-none mb-6 focus:ring-2 focus:ring-indigo-500">
+                    <button onclick="verifyAccess()" class="w-full bg-gray-800 text-white font-bold py-4 rounded-2xl hover:bg-gray-900 transition-all">解锁后台</button>
                 </div>
             </div>
 
             <!-- 数据控制台 -->
-            <div id="admin-dashboard" class="hidden">
-                <div class="glass-card rounded-3xl overflow-hidden">
-                    <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div id="admin-panel" class="hidden">
+                <div class="glass-card rounded-[2rem] overflow-hidden">
+                    <div class="p-8 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
                         <div>
-                            <h2 class="text-xl font-bold text-gray-800">订单数据中心</h2>
-                            <p class="text-sm text-gray-400">当前已采集 <span id="data-count" class="font-bold text-indigo-600">0</span> 条记录</p>
+                            <h2 class="text-2xl font-bold text-gray-800">数据管理中心</h2>
+                            <p class="text-sm text-gray-400 mt-1">总计采集: <span id="count" class="font-bold text-indigo-600">0</span> 条记录</p>
                         </div>
-                        <div class="flex space-x-2">
-                            <button onclick="generateReport('links')" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-50 transition-all flex items-center">
-                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-                                整理链接
-                            </button>
-                            <button onclick="generateReport('all')" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all flex items-center shadow-md">
-                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                整理全部
-                            </button>
+                        <div class="flex space-x-3 w-full md:w-auto">
+                            <button onclick="exportData('links')" class="flex-1 md:flex-none px-6 py-3 bg-white border border-gray-200 text-gray-600 rounded-xl text-sm font-bold hover:bg-gray-50">提取链接</button>
+                            <button onclick="exportData('all')" class="flex-1 md:flex-none px-6 py-3 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-100">一键导出全部</button>
                         </div>
                     </div>
 
@@ -136,31 +136,29 @@
                         <table class="w-full text-left">
                             <thead class="bg-gray-50/50">
                                 <tr>
-                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">提交时间</th>
-                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">订单号</th>
-                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">链接详情</th>
-                                    <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">操作</th>
+                                    <th class="px-8 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">提交时间</th>
+                                    <th class="px-8 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">订单单号</th>
+                                    <th class="px-8 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">链接详情</th>
+                                    <th class="px-8 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">管理</th>
                                 </tr>
                             </thead>
                             <tbody id="dataTable" class="divide-y divide-gray-100">
-                                <!-- JS加载 -->
+                                <!-- 由 JS 渲染 -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-        </main>
+        </section>
     </div>
 
-    <!-- 模态框组件 (教程/成功/导出) -->
-    <div id="modal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl transform transition-all">
-            <div id="modal-icon" class="mb-4"></div>
-            <h3 id="modal-title" class="text-xl font-bold text-gray-800 mb-2"></h3>
-            <div id="modal-body" class="text-gray-500 mb-8 overflow-y-auto max-h-[60vh]"></div>
-            <div id="modal-footer">
-                <button onclick="closeModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 rounded-2xl font-bold transition-all">关闭</button>
-            </div>
+    <!-- 通用弹窗组件 -->
+    <div id="modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-[2rem] max-w-lg w-full p-10 shadow-2xl animate-fade-up">
+            <div id="modal-icon" class="mb-6"></div>
+            <h3 id="modal-title" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+            <div id="modal-body" class="text-gray-500 mb-8 max-h-[50vh] overflow-y-auto"></div>
+            <button onclick="closeModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-4 rounded-2xl font-bold transition-all">确定并返回</button>
         </div>
     </div>
 
@@ -169,34 +167,37 @@
         import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // 配置
+        // 配置 - 请注意：__firebase_config 等变量由平台提供，如在本地运行需替换为真实配置
         const firebaseConfig = JSON.parse(__firebase_config);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'alipay-order-v2';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'alipay-system-v3';
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        let user = null;
-        let orders = [];
-        const ADMIN_PASSWORD = "admin888"; // 你可以在这里修改密码
+        let currentUser = null;
+        let dataList = [];
+        const ADMIN_PWD = "admin888"; // 后台默认密码
 
-        // 认证
-        const start = async () => {
+        // 身份初始化
+        const init = async () => {
             await signInAnonymously(auth);
             onAuthStateChanged(auth, u => {
-                user = u;
-                if (u) listenData();
+                if (u) {
+                    currentUser = u;
+                    syncData();
+                }
             });
         };
-        start();
+        init();
 
-        function listenData() {
+        // 数据同步
+        function syncData() {
             const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'orders'));
-            onSnapshot(q, snapshot => {
-                orders = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
+            onSnapshot(q, snap => {
+                dataList = snap.docs.map(d => ({ id: d.id, ...d.data() }))
                                .sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
                 renderTable();
-                document.getElementById('data-count').innerText = orders.length;
+                document.getElementById('count').innerText = dataList.length;
             });
         }
 
@@ -209,138 +210,140 @@
             const btn = document.getElementById('submitBtn');
 
             if (!link.toLowerCase().includes('alipay')) {
-                showModal('教程：如何获取正确链接', `
-                    <div class="bg-indigo-50 p-4 rounded-2xl mb-4 border border-indigo-100">
-                        <p class="text-indigo-700 text-sm font-medium">链接检测失败！提交的内容必须包含 "alipay"。</p>
+                showModal('操作教程', `
+                    <div class="bg-amber-50 p-6 rounded-2xl mb-4 border border-amber-100">
+                        <p class="text-amber-700 text-sm leading-relaxed">检测到输入不含 "alipay"，请按照以下教程获取正确链接：</p>
                     </div>
-                    <ul class="space-y-3 text-sm">
-                        <li class="flex items-start"><span class="w-5 h-5 bg-indigo-500 text-white rounded-full flex-shrink-0 flex items-center justify-center text-[10px] mt-0.5 mr-2">1</span> <span>打开支付宝账单详情。</span></li>
-                        <li class="flex items-start"><span class="w-5 h-5 bg-indigo-500 text-white rounded-full flex-shrink-0 flex items-center justify-center text-[10px] mt-0.5 mr-2">2</span> <span>点击页面下方的“投诉与帮助”或右上角分享链接。</span></li>
-                        <li class="flex items-start"><span class="w-5 h-5 bg-indigo-500 text-white rounded-full flex-shrink-0 flex items-center justify-center text-[10px] mt-0.5 mr-2">3</span> <span>复制生成的以 https://render.alipay.com/ 开头的链接。</span></li>
+                    <ul class="space-y-4 text-sm">
+                        <li class="flex items-center"><span class="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px] mr-3">1</span> <span>打开支付宝账单详情页</span></li>
+                        <li class="flex items-center"><span class="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px] mr-3">2</span> <span>点击右上角分享或“投诉与帮助”</span></li>
+                        <li class="flex items-center"><span class="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px] mr-3">3</span> <span>复制生成的 https:// 链接后再来提交</span></li>
                     </ul>
-                `, 'error');
+                `, 'tutorial');
                 return;
             }
 
             btn.disabled = true;
-            btn.innerText = "提交中...";
+            btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>正在同步...</span>`;
 
             try {
                 await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'orders'), {
                     link, orderId, timestamp: serverTimestamp()
                 });
-                showModal('提交成功', '我们已收到您的订单信息，请耐心等待处理。', 'success');
+                showModal('提交成功', '您的订单已进入待处理队列，请勿重复提交。', 'success');
                 form.reset();
             } catch (err) {
-                showModal('系统错误', '请检查网络连接后重试。', 'error');
+                showModal('网络错误', '暂时无法连接到云端数据库，请稍后重试。', 'error');
             } finally {
                 btn.disabled = false;
-                btn.innerText = "确认并提交";
+                btn.innerHTML = `<span>立即提交数据</span><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>`;
             }
         };
 
-        // 后台权限
-        window.verifyAdmin = () => {
-            const pwd = document.getElementById('adminPwd').value;
-            if (pwd === ADMIN_PASSWORD) {
-                document.getElementById('admin-auth').classList.add('hidden');
-                document.getElementById('admin-dashboard').classList.remove('hidden');
-            } else {
-                alert('密码错误！');
-            }
-        };
-
-        window.switchTab = (tab) => {
-            const isSubmit = tab === 'submit';
+        // UI 交互
+        window.switchView = (view) => {
+            const isSubmit = view === 'submit';
             document.getElementById('view-submit').classList.toggle('hidden', !isSubmit);
             document.getElementById('view-admin').classList.toggle('hidden', isSubmit);
             
-            const btnSub = document.getElementById('tab-submit');
-            const btnAdm = document.getElementById('tab-admin');
+            const tabSub = document.getElementById('tab-submit');
+            const tabAdm = document.getElementById('tab-admin');
             
-            btnSub.className = isSubmit 
-                ? "px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 bg-white shadow-sm text-indigo-600" 
-                : "px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 text-gray-600 hover:text-indigo-600";
-            btnAdm.className = !isSubmit 
-                ? "px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 bg-white shadow-sm text-indigo-600" 
-                : "px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300 text-gray-600 hover:text-indigo-600";
+            if(isSubmit) {
+                tabSub.className = "px-5 py-2 rounded-xl text-sm font-bold transition-all bg-white shadow-sm text-indigo-600";
+                tabAdm.className = "px-5 py-2 rounded-xl text-sm font-bold transition-all text-gray-500 hover:text-indigo-600";
+            } else {
+                tabAdm.className = "px-5 py-2 rounded-xl text-sm font-bold transition-all bg-white shadow-sm text-indigo-600";
+                tabSub.className = "px-5 py-2 rounded-xl text-sm font-bold transition-all text-gray-500 hover:text-indigo-600";
+            }
         };
 
-        function renderTable() {
+        window.verifyAccess = () => {
+            const pwd = document.getElementById('adminPwd').value;
+            if (pwd === ADMIN_PWD) {
+                document.getElementById('auth-wall').classList.add('hidden');
+                document.getElementById('admin-panel').classList.remove('hidden');
+            } else {
+                alert('密码验证失败！');
+            }
+        };
+
+        window.renderTable = () => {
             const tbody = document.getElementById('dataTable');
-            tbody.innerHTML = orders.map(item => `
-                <tr class="hover:bg-gray-50/50 transition-colors">
-                    <td class="px-6 py-4 text-xs text-gray-400 font-mono">
-                        ${item.timestamp ? new Date(item.timestamp.seconds * 1000).toLocaleString('zh-CN', {hour12:false}).slice(5, -3) : 'Loading...'}
+            tbody.innerHTML = dataList.map(item => `
+                <tr class="hover:bg-indigo-50/30 transition-colors group">
+                    <td class="px-8 py-5 text-[11px] text-gray-400 font-mono">
+                        ${item.timestamp ? new Date(item.timestamp.seconds * 1000).toLocaleString().slice(5) : 'Syncing...'}
                     </td>
-                    <td class="px-6 py-4 text-sm font-bold text-gray-700">${item.orderId}</td>
-                    <td class="px-6 py-4 text-sm text-blue-500 truncate max-w-[200px] font-mono">${item.link}</td>
-                    <td class="px-6 py-4">
-                        <button onclick="deleteItem('${item.id}')" class="text-red-400 hover:text-red-600 text-xs font-bold">删除</button>
+                    <td class="px-8 py-5 text-sm font-bold text-gray-700">${item.orderId}</td>
+                    <td class="px-8 py-5 text-sm text-indigo-500 font-mono truncate max-w-[200px]">${item.link}</td>
+                    <td class="px-8 py-5">
+                        <button onclick="deleteDocById('${item.id}')" class="opacity-0 group-hover:opacity-100 transition-opacity text-xs font-bold text-red-400 hover:text-red-600">移除</button>
                     </td>
                 </tr>
             `).join('');
-        }
+        };
 
-        window.deleteItem = async (id) => {
-            if (confirm('确定删除此记录吗？')) {
+        window.deleteDocById = async (id) => {
+            if(confirm('确认从云端永久移除此条数据吗？')) {
                 await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'orders', id));
             }
         };
 
-        window.generateReport = (type) => {
-            if (orders.length === 0) return alert('暂无数据');
-            
-            let text = "";
-            if (type === 'links') {
-                text = orders.map(o => o.link).join('\n');
+        window.exportData = (mode) => {
+            if(dataList.length === 0) return alert('数据中心目前为空');
+            let content = "";
+            if(mode === 'links') {
+                content = dataList.map(i => i.link).join('\n');
             } else {
-                text = orders.map(o => `${o.orderId} | ${o.link}`).join('\n');
+                content = dataList.map(i => `${i.orderId} ---- ${i.link}`).join('\n');
             }
 
-            showModal('整理结果', `
-                <p class="text-xs mb-2">已为您生成纯文本内容：</p>
-                <textarea id="reportText" class="w-full h-48 bg-gray-50 p-4 rounded-2xl text-xs font-mono border-0 focus:ring-1 focus:ring-indigo-500 outline-none">${text}</textarea>
-                <button onclick="copyText()" id="copyBtn" class="w-full bg-indigo-600 text-white py-3 rounded-2xl mt-4 font-bold">复制到剪贴板</button>
+            showModal('整理完成', `
+                <p class="text-[10px] text-gray-400 font-bold uppercase mb-3">纯文本内容汇总：</p>
+                <textarea id="copyArea" class="w-full h-64 p-5 bg-gray-50 rounded-2xl border-0 text-xs font-mono outline-none focus:ring-2 focus:ring-indigo-100">${content}</textarea>
+                <button onclick="copyToClipboard()" id="copyBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl mt-4">复制到剪贴板</button>
             `, 'report');
         };
 
-        window.copyText = () => {
-            const el = document.getElementById('reportText');
-            el.select();
+        window.copyToClipboard = () => {
+            const area = document.getElementById('copyArea');
+            area.select();
             document.execCommand('copy');
             const btn = document.getElementById('copyBtn');
-            btn.innerText = "复制成功！";
-            btn.className = "w-full bg-green-500 text-white py-3 rounded-2xl mt-4 font-bold";
+            btn.innerText = "已成功复制内容";
+            btn.className = "w-full bg-green-500 text-white font-bold py-4 rounded-2xl mt-4";
             setTimeout(() => {
                 btn.innerText = "复制到剪贴板";
-                btn.className = "w-full bg-indigo-600 text-white py-3 rounded-2xl mt-4 font-bold";
+                btn.className = "w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl mt-4";
             }, 2000);
         };
 
-        window.showModal = (title, body, mode) => {
-            const modal = document.getElementById('modal');
-            const mTitle = document.getElementById('modal-title');
-            const mBody = document.getElementById('modal-body');
-            const mIcon = document.getElementById('modal-icon');
+        window.showModal = (title, body, type) => {
+            const m = document.getElementById('modal');
+            const mt = document.getElementById('modal-title');
+            const mb = document.getElementById('modal-body');
+            const mi = document.getElementById('modal-icon');
 
-            mTitle.innerText = title;
-            mBody.innerHTML = body;
+            mt.innerText = title;
+            mb.innerHTML = body;
 
-            if (mode === 'success') {
-                mIcon.innerHTML = `<div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>`;
-            } else if (mode === 'error') {
-                mIcon.innerHTML = `<div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>`;
-            } else {
-                mIcon.innerHTML = `<div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div>`;
-            }
-
-            modal.classList.remove('hidden');
+            const iconMap = {
+                success: `<div class="w-14 h-14 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>`,
+                error: `<div class="w-14 h-14 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></div>`,
+                tutorial: `<div class="w-14 h-14 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>`,
+                report: `<div class="w-14 h-14 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div>`
+            };
+            mi.innerHTML = iconMap[type] || '';
+            m.classList.remove('hidden');
         };
 
         window.closeModal = () => {
             document.getElementById('modal').classList.add('hidden');
         };
+
     </script>
 </body>
 </html>
+
+```
