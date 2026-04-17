@@ -1,4 +1,4 @@
-```react
+```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -27,20 +27,13 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .btn-gradient:hover {
+        .btn-gradient:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
             filter: brightness(1.1);
         }
 
-        .input-focus {
-            transition: all 0.3s ease;
-        }
-
-        .input-focus:focus {
-            background: white;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-        }
+        .btn-gradient:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .animate-fade-up {
             animation: fadeUp 0.5s ease-out forwards;
@@ -65,7 +58,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-gray-800">OrderHub</h1>
-                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Enterprise Suite</span>
+                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">v2.5 Stable</span>
                 </div>
             </div>
             
@@ -80,23 +73,22 @@
             <div class="glass-card rounded-[2.5rem] p-10">
                 <div class="mb-8 text-center">
                     <h2 class="text-2xl font-bold text-gray-800">录入新订单</h2>
-                    <p class="text-sm text-gray-400 mt-1">请输入有效的支付链接与单号</p>
+                    <p class="text-sm text-gray-400 mt-1">请输入支付链接与关联订单号</p>
                 </div>
 
                 <form id="submissionForm" class="space-y-6">
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">支付链接</label>
                         <input type="text" id="link" placeholder="必须包含 alipay 字符" required
-                            class="w-full px-5 py-4 rounded-2xl bg-gray-50 border-0 input-focus outline-none text-gray-700 placeholder:text-gray-300">
+                            class="w-full px-5 py-4 rounded-2xl bg-gray-50 border-0 outline-none text-gray-700 focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">订单编号</label>
                         <input type="text" id="orderId" placeholder="请输入订单号" required
-                            class="w-full px-5 py-4 rounded-2xl bg-gray-50 border-0 input-focus outline-none text-gray-700 placeholder:text-gray-300">
+                            class="w-full px-5 py-4 rounded-2xl bg-gray-50 border-0 outline-none text-gray-700 focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <button type="submit" id="submitBtn" class="w-full btn-gradient text-white font-bold py-4 rounded-2xl shadow-lg mt-4 flex items-center justify-center space-x-2">
                         <span>立即提交数据</span>
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </button>
                 </form>
             </div>
@@ -104,47 +96,36 @@
 
         <!-- 管理后台 -->
         <section id="view-admin" class="hidden animate-fade-up">
-            <!-- 密码验证层 -->
             <div id="auth-wall" class="max-w-md mx-auto pt-10">
                 <div class="glass-card rounded-[2.5rem] p-10 text-center">
-                    <div class="w-16 h-16 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                    </div>
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">安全验证</h2>
-                    <p class="text-sm text-gray-400 mb-8">此区域仅管理员可见</p>
+                    <p class="text-sm text-gray-400 mb-8">管理区域需要身份验证</p>
                     <input type="password" id="adminPwd" placeholder="请输入管理密码" 
                         class="w-full px-5 py-4 rounded-2xl bg-gray-50 text-center border-0 outline-none mb-6 focus:ring-2 focus:ring-indigo-500">
-                    <button onclick="verifyAccess()" class="w-full bg-gray-800 text-white font-bold py-4 rounded-2xl hover:bg-gray-900 transition-all">解锁后台</button>
+                    <button onclick="verifyAccess()" class="w-full bg-gray-800 text-white font-bold py-4 rounded-2xl hover:bg-gray-900">解锁后台</button>
                 </div>
             </div>
 
-            <!-- 数据控制台 -->
             <div id="admin-panel" class="hidden">
                 <div class="glass-card rounded-[2rem] overflow-hidden">
-                    <div class="p-8 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div class="p-8 border-b border-gray-100 flex justify-between items-center">
                         <div>
-                            <h2 class="text-2xl font-bold text-gray-800">数据管理中心</h2>
-                            <p class="text-sm text-gray-400 mt-1">总计采集: <span id="count" class="font-bold text-indigo-600">0</span> 条记录</p>
+                            <h2 class="text-2xl font-bold text-gray-800">数据管理</h2>
+                            <p class="text-sm text-gray-400">已采集: <span id="count" class="font-bold text-indigo-600">0</span></p>
                         </div>
-                        <div class="flex space-x-3 w-full md:w-auto">
-                            <button onclick="exportData('links')" class="flex-1 md:flex-none px-6 py-3 bg-white border border-gray-200 text-gray-600 rounded-xl text-sm font-bold hover:bg-gray-50">提取链接</button>
-                            <button onclick="exportData('all')" class="flex-1 md:flex-none px-6 py-3 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-100">一键导出全部</button>
-                        </div>
+                        <button onclick="exportData()" class="px-6 py-3 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg">导出全部</button>
                     </div>
-
-                    <div class="overflow-x-auto hide-scrollbar">
+                    <div class="overflow-x-auto">
                         <table class="w-full text-left">
                             <thead class="bg-gray-50/50">
                                 <tr>
-                                    <th class="px-8 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">提交时间</th>
-                                    <th class="px-8 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">订单单号</th>
-                                    <th class="px-8 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">链接详情</th>
-                                    <th class="px-8 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">管理</th>
+                                    <th class="px-8 py-4 text-[10px] font-bold text-gray-400 uppercase">时间</th>
+                                    <th class="px-8 py-4 text-[10px] font-bold text-gray-400 uppercase">单号</th>
+                                    <th class="px-8 py-4 text-[10px] font-bold text-gray-400 uppercase">链接</th>
+                                    <th class="px-8 py-4 text-[10px] font-bold text-gray-400 uppercase">操作</th>
                                 </tr>
                             </thead>
-                            <tbody id="dataTable" class="divide-y divide-gray-100">
-                                <!-- 由 JS 渲染 -->
-                            </tbody>
+                            <tbody id="dataTable" class="divide-y divide-gray-100"></tbody>
                         </table>
                     </div>
                 </div>
@@ -152,13 +133,12 @@
         </section>
     </div>
 
-    <!-- 通用弹窗组件 -->
+    <!-- 弹窗 -->
     <div id="modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-[2rem] max-w-lg w-full p-10 shadow-2xl animate-fade-up">
-            <div id="modal-icon" class="mb-6"></div>
+        <div class="bg-white rounded-[2rem] max-w-lg w-full p-10 shadow-2xl">
             <h3 id="modal-title" class="text-2xl font-bold text-gray-800 mb-2"></h3>
             <div id="modal-body" class="text-gray-500 mb-8 max-h-[50vh] overflow-y-auto"></div>
-            <button onclick="closeModal()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-4 rounded-2xl font-bold transition-all">确定并返回</button>
+            <button onclick="closeModal()" class="w-full bg-gray-100 py-4 rounded-2xl font-bold">确定</button>
         </div>
     </div>
 
@@ -167,33 +147,36 @@
         import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // 配置 - 请注意：__firebase_config 等变量由平台提供，如在本地运行需替换为真实配置
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'alipay-system-v3';
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+        // --- 核心配置 ---
+        // 如果你在 GitHub 使用，需要申请自己的 Firebase 配置并贴在这里
+        let firebaseConfig;
+        try {
+            firebaseConfig = typeof __firebase_config !== 'undefined' 
+                ? JSON.parse(__firebase_config) 
+                : { /* 这里填入你的真实 Firebase 配置 */ };
+        } catch(e) {
+            console.error("Config missing");
+        }
 
-        let currentUser = null;
-        let dataList = [];
-        const ADMIN_PWD = "admin888"; // 后台默认密码
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'alipay-v3-prod';
+        const ADMIN_PWD = "admin888"; 
 
-        // 身份初始化
-        const init = async () => {
-            await signInAnonymously(auth);
-            onAuthStateChanged(auth, u => {
-                if (u) {
-                    currentUser = u;
-                    syncData();
-                }
-            });
-        };
-        init();
+        let db, auth, currentUser, dataList = [];
 
-        // 数据同步
+        // 初始化
+        if (firebaseConfig && firebaseConfig.apiKey) {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            signInAnonymously(auth);
+            onAuthStateChanged(auth, u => { if(u) { currentUser = u; syncData(); } });
+        } else {
+            console.warn("Firebase 未配置");
+        }
+
         function syncData() {
-            const q = query(collection(db, 'artifacts', appId, 'public', 'data', 'orders'));
-            onSnapshot(q, snap => {
+            if(!db) return;
+            onSnapshot(query(collection(db, 'artifacts', appId, 'public', 'data', 'orders')), snap => {
                 dataList = snap.docs.map(d => ({ id: d.id, ...d.data() }))
                                .sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
                 renderTable();
@@ -201,147 +184,75 @@
             });
         }
 
-        // 提交逻辑
-        const form = document.getElementById('submissionForm');
-        form.onsubmit = async (e) => {
+        // 提交
+        document.getElementById('submissionForm').onsubmit = async (e) => {
             e.preventDefault();
             const link = document.getElementById('link').value.trim();
             const orderId = document.getElementById('orderId').value.trim();
-            const btn = document.getElementById('submitBtn');
 
             if (!link.toLowerCase().includes('alipay')) {
-                showModal('操作教程', `
-                    <div class="bg-amber-50 p-6 rounded-2xl mb-4 border border-amber-100">
-                        <p class="text-amber-700 text-sm leading-relaxed">检测到输入不含 "alipay"，请按照以下教程获取正确链接：</p>
-                    </div>
-                    <ul class="space-y-4 text-sm">
-                        <li class="flex items-center"><span class="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px] mr-3">1</span> <span>打开支付宝账单详情页</span></li>
-                        <li class="flex items-center"><span class="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px] mr-3">2</span> <span>点击右上角分享或“投诉与帮助”</span></li>
-                        <li class="flex items-center"><span class="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-[10px] mr-3">3</span> <span>复制生成的 https:// 链接后再来提交</span></li>
-                    </ul>
-                `, 'tutorial');
+                showModal('操作教程', '链接必须包含 "alipay"。请从支付宝账单详情页复制链接。');
                 return;
             }
 
-            btn.disabled = true;
-            btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><span>正在同步...</span>`;
+            if (!db) {
+                showModal('配置错误', '检测到你尚未配置 Firebase 数据库。请联系开发者配置后台。');
+                return;
+            }
 
             try {
                 await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'orders'), {
                     link, orderId, timestamp: serverTimestamp()
                 });
-                showModal('提交成功', '您的订单已进入待处理队列，请勿重复提交。', 'success');
-                form.reset();
-            } catch (err) {
-                showModal('网络错误', '暂时无法连接到云端数据库，请稍后重试。', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<span>立即提交数据</span><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>`;
+                showModal('成功', '订单已提交并同步至后台。');
+                e.target.reset();
+            } catch(err) {
+                showModal('失败', '提交失败，请检查网络或配置。');
             }
         };
 
-        // UI 交互
+        // UI 函数
         window.switchView = (view) => {
             const isSubmit = view === 'submit';
-            document.getElementById('view-submit').classList.toggle('hidden', !isSubmit);
-            document.getElementById('view-admin').classList.toggle('hidden', isSubmit);
+            document.getElementById('view-submit').style.display = isSubmit ? 'block' : 'none';
+            document.getElementById('view-admin').style.display = isSubmit ? 'none' : 'block';
             
-            const tabSub = document.getElementById('tab-submit');
-            const tabAdm = document.getElementById('tab-admin');
-            
-            if(isSubmit) {
-                tabSub.className = "px-5 py-2 rounded-xl text-sm font-bold transition-all bg-white shadow-sm text-indigo-600";
-                tabAdm.className = "px-5 py-2 rounded-xl text-sm font-bold transition-all text-gray-500 hover:text-indigo-600";
-            } else {
-                tabAdm.className = "px-5 py-2 rounded-xl text-sm font-bold transition-all bg-white shadow-sm text-indigo-600";
-                tabSub.className = "px-5 py-2 rounded-xl text-sm font-bold transition-all text-gray-500 hover:text-indigo-600";
-            }
+            document.getElementById('tab-submit').className = isSubmit ? "px-5 py-2 rounded-xl text-sm font-bold bg-white shadow-sm text-indigo-600" : "px-5 py-2 rounded-xl text-sm font-bold text-gray-500";
+            document.getElementById('tab-admin').className = !isSubmit ? "px-5 py-2 rounded-xl text-sm font-bold bg-white shadow-sm text-indigo-600" : "px-5 py-2 rounded-xl text-sm font-bold text-gray-500";
         };
 
         window.verifyAccess = () => {
-            const pwd = document.getElementById('adminPwd').value;
-            if (pwd === ADMIN_PWD) {
+            if (document.getElementById('adminPwd').value === ADMIN_PWD) {
                 document.getElementById('auth-wall').classList.add('hidden');
                 document.getElementById('admin-panel').classList.remove('hidden');
-            } else {
-                alert('密码验证失败！');
-            }
+            } else { alert('密码错误'); }
         };
 
         window.renderTable = () => {
-            const tbody = document.getElementById('dataTable');
-            tbody.innerHTML = dataList.map(item => `
-                <tr class="hover:bg-indigo-50/30 transition-colors group">
-                    <td class="px-8 py-5 text-[11px] text-gray-400 font-mono">
-                        ${item.timestamp ? new Date(item.timestamp.seconds * 1000).toLocaleString().slice(5) : 'Syncing...'}
-                    </td>
-                    <td class="px-8 py-5 text-sm font-bold text-gray-700">${item.orderId}</td>
-                    <td class="px-8 py-5 text-sm text-indigo-500 font-mono truncate max-w-[200px]">${item.link}</td>
-                    <td class="px-8 py-5">
-                        <button onclick="deleteDocById('${item.id}')" class="opacity-0 group-hover:opacity-100 transition-opacity text-xs font-bold text-red-400 hover:text-red-600">移除</button>
-                    </td>
+            document.getElementById('dataTable').innerHTML = dataList.map(i => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-8 py-4 text-xs text-gray-400">${i.timestamp ? '已同步' : '同步中'}</td>
+                    <td class="px-8 py-4 text-sm font-bold">${i.orderId}</td>
+                    <td class="px-8 py-4 text-sm text-indigo-500 truncate max-w-[150px]">${i.link}</td>
+                    <td class="px-8 py-4"><button onclick="del('${i.id}')" class="text-red-400 text-xs">删除</button></td>
                 </tr>
             `).join('');
         };
 
-        window.deleteDocById = async (id) => {
-            if(confirm('确认从云端永久移除此条数据吗？')) {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'orders', id));
-            }
+        window.del = async (id) => { if(confirm('删除？')) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'orders', id)); };
+
+        window.exportData = () => {
+            const text = dataList.map(i => `${i.orderId} ---- ${i.link}`).join('\n');
+            showModal('数据导出', `<textarea class="w-full h-48 p-4 bg-gray-50 rounded-xl text-xs font-mono">${text}</textarea>`);
         };
 
-        window.exportData = (mode) => {
-            if(dataList.length === 0) return alert('数据中心目前为空');
-            let content = "";
-            if(mode === 'links') {
-                content = dataList.map(i => i.link).join('\n');
-            } else {
-                content = dataList.map(i => `${i.orderId} ---- ${i.link}`).join('\n');
-            }
-
-            showModal('整理完成', `
-                <p class="text-[10px] text-gray-400 font-bold uppercase mb-3">纯文本内容汇总：</p>
-                <textarea id="copyArea" class="w-full h-64 p-5 bg-gray-50 rounded-2xl border-0 text-xs font-mono outline-none focus:ring-2 focus:ring-indigo-100">${content}</textarea>
-                <button onclick="copyToClipboard()" id="copyBtn" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl mt-4">复制到剪贴板</button>
-            `, 'report');
+        window.showModal = (t, b) => {
+            document.getElementById('modal-title').innerText = t;
+            document.getElementById('modal-body').innerHTML = b;
+            document.getElementById('modal').classList.remove('hidden');
         };
 
-        window.copyToClipboard = () => {
-            const area = document.getElementById('copyArea');
-            area.select();
-            document.execCommand('copy');
-            const btn = document.getElementById('copyBtn');
-            btn.innerText = "已成功复制内容";
-            btn.className = "w-full bg-green-500 text-white font-bold py-4 rounded-2xl mt-4";
-            setTimeout(() => {
-                btn.innerText = "复制到剪贴板";
-                btn.className = "w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl mt-4";
-            }, 2000);
-        };
-
-        window.showModal = (title, body, type) => {
-            const m = document.getElementById('modal');
-            const mt = document.getElementById('modal-title');
-            const mb = document.getElementById('modal-body');
-            const mi = document.getElementById('modal-icon');
-
-            mt.innerText = title;
-            mb.innerHTML = body;
-
-            const iconMap = {
-                success: `<div class="w-14 h-14 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg></div>`,
-                error: `<div class="w-14 h-14 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></div>`,
-                tutorial: `<div class="w-14 h-14 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>`,
-                report: `<div class="w-14 h-14 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></div>`
-            };
-            mi.innerHTML = iconMap[type] || '';
-            m.classList.remove('hidden');
-        };
-
-        window.closeModal = () => {
-            document.getElementById('modal').classList.add('hidden');
-        };
-
+        window.closeModal = () => document.getElementById('modal').classList.add('hidden');
     </script>
 </body>
 </html>
